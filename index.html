@@ -41,19 +41,9 @@
         },
       };
 
-      const age_config = {
-        windowSizeMs: 4000,
-        maxVarianceCutoff: Math.pow(7, 2),
-        numericalStability: 1,
-      };
-
-      const gender_config = {
-        smoothness: 0.95,
-      };
       const emotion_config = { smoothness: 0.4, enableBalancer: false };
       const arousal_config = { smoothness: 0.7 };
       const attention_config = { smoothness: 0.83 };
-      const aggregator_config = { initialWaitMs: 2000, periodMs: 1000 };
       const no_faces_config = {
         timeWindowMs: 2000,
         initialToleranceMs: 2000,
@@ -69,10 +59,6 @@
         .addModule(CY.modules().ALARM_NO_FACE.name, no_faces_config)
         .addModule(CY.modules().ALARM_LOW_ATTENTION.name, low_attention_config)
         .addModule(CY.modules().FACE_EMOTION.name, emotion_config)
-        .addModule(CY.modules().FACE_AGE.name, age_config)
-        .addModule(CY.modules().FACE_GENDER.name, gender_config)
-        .addModule(CY.modules().FACE_POSE.name, {})
-        .addModule(CY.modules().FACE_FEATURES.name, {})
         .addModule(CY.modules().FACE_AROUSAL_VALENCE.name, arousal_config)
         .addModule(CY.modules().FACE_ATTENTION.name, attention_config)
         .source(customSource)
@@ -104,48 +90,6 @@
           NativeApp.onDataFromMphSdk(
             "EMOTION",
             JSON.stringify(data.detail.output.emotion)
-          );
-        }
-      });
-
-      window.addEventListener("CY_FACE_AGE_RESULT", function (data) {
-        if (data) {
-          NativeApp.onDataFromMphSdk(
-            "AGE",
-            JSON.stringify(data.detail.output.numericAge)
-          );
-        }
-      });
-
-      let gender_results = 0;
-      const MIN_GENDER_RESULTS = 20;
-
-      window.addEventListener("CY_FACE_GENDER_RESULT", function (data) {
-        if (data) {
-          gender_results += 1;
-          if (gender_results >= MIN_GENDER_RESULTS) {
-            NativeApp.onDataFromMphSdk(
-              "GENDER",
-              JSON.stringify(data.detail.output.gender)
-            );
-          }
-        }
-      });
-
-      window.addEventListener("CY_FACE_POSE_RESULT", function (data) {
-        if (data) {
-          NativeApp.onDataFromMphSdk(
-            "POSE",
-            JSON.stringify(data.detail.output.pose)
-          );
-        }
-      });
-
-      window.addEventListener("CY_FACE_FEATURES_RESULT", function (data) {
-        if (data) {
-          NativeApp.onDataFromMphSdk(
-            "FEATURES",
-            JSON.stringify(data.detail.output.features)
           );
         }
       });
